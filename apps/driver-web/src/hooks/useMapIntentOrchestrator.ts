@@ -2,6 +2,7 @@ import type { Station } from "@evocharge/types"
 import { useEffect, useState } from "react"
 
 import { useMapStore } from "@/components/map/store"
+import { resolveRoadRouteForIntent } from "@/lib/roadRouteResolver"
 import { useMapIntentStore } from "@/store/mapIntentStore"
 
 const FOCUS_ZOOM = 14
@@ -65,6 +66,8 @@ export function useMapIntentOrchestrator(
     if (!routeFrom || !routeTo) return
 
     setActiveRoute(routeFrom, routeTo)
+
+    void resolveRoadRouteForIntent(routeFrom, routeTo)
 
     const destinationStation = stations.find(
       (station) =>

@@ -1,5 +1,6 @@
 import { motion } from "framer-motion"
-import { AlertTriangle, Battery, Navigation, Sparkles } from "lucide-react"
+import { AlertTriangle, Battery, Loader2, Navigation, Sparkles } from "lucide-react"
+import { useState } from "react"
 
 import { LocationSearchDropdown } from "@/components/map/LocationSearchDropdown"
 import { useRouteStore } from "@/components/route/store"
@@ -9,9 +10,14 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import type { ActiveChargingRoute } from "@/hooks/useChargingRoute"
+import { useIsMobile } from "@/hooks/useIsMobile"
+import { useUserLocation } from "@/hooks/useUserLocation"
 import { getStationEvoScore } from "@/lib/evoscore"
+import { startNavigationFromMapRoute } from "@/lib/navigationActions"
 import { getRouteMode } from "@/lib/routeEngine"
 import { slideUp } from "@/lib/motion"
+import { useMapIntentStore } from "@/store/mapIntentStore"
+import { useNavigationStore } from "@/store/navigationStore"
 import { cn } from "@/lib/utils"
 
 const MODE_STYLES = {
@@ -45,6 +51,14 @@ export function BatteryRoutePanel({
   const isRouteEnabled = useRouteStore((state) => state.isRouteEnabled)
   const setBatteryLevel = useRouteStore((state) => state.setBatteryLevel)
   const setRouteEnabled = useRouteStore((state) => state.setRouteEnabled)
+  const mapActiveRoute = useMapIntentStore((state) => state.activeRoute)
+  const isRouteGeometryLoading = useMapIntentStore(
+    (state) => state.isRouteGeometryLoading,
+  )
+  const navigationMode = useNavigationStore((state) => state.navigationMode)
+  const isMobile = useIsMobile()
+  const { safeLocation } = useUserLocation()
+  const [isStartingNavigation, setIsStartingNavigation] = useState(false)
 
   const mode = getRouteMode(batteryLevel)
   const modeStyle = MODE_STYLES[mode]
@@ -139,6 +153,32 @@ export function BatteryRoutePanel({
             {isRouteEnabled ? "Route on" : "Route off"}
           </Button>
         </div>
+
+        {mapActiveRoute && navigationMode === "idle" ? (
+          <Button
+            type="button"
+            className="w-full gap-2 bg-brand-cyan text-background hover:bg-brand-cyan/90"
+            disabled={isStartingNavigation || isRouteGeometryLoading}
+            onClick={() => {
+              setIsStartingNavigation(true)
+              void startNavigationFromMapRoute({
+                fullscreen: isMobile,
+                userLocation: safeLocation,
+              }).finally(() => {
+                setIsStartingNavigation(false)
+              })
+            }}
+          >
+            {isStartingNavigation || isRouteGeometryLoading ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <Navigation className="size-4" />
+            )}
+            {isStartingNavigation || isRouteGeometryLoading
+              ? "Preparing route…"
+              : "Start Navigation"}
+          </Button>
+        ) : null}
 
         {isRouteEnabled && routeResult ? (
           <motion.div

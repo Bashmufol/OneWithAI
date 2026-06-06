@@ -6,7 +6,7 @@ export function MapLegend() {
   const heatmapEnabled = useMapStore((state) => state.heatmapEnabled)
 
   return (
-    <Card className="pointer-events-none absolute bottom-4 left-4 z-10 border-border/80 bg-card/90 shadow-lg ring-border/60 backdrop-blur-sm">
+    <Card className="pointer-events-none absolute bottom-[max(1rem,env(safe-area-inset-bottom))] left-[max(1rem,env(safe-area-inset-left))] z-10 max-w-[calc(100%-5.5rem)] border-border/80 bg-card/90 shadow-lg ring-border/60 backdrop-blur-sm md:max-w-none">
       <CardContent className="space-y-2 px-3 py-2">
         <div className="flex flex-wrap gap-2">
           <Badge className="bg-status-available/15 text-status-available ring-1 ring-status-available/30">

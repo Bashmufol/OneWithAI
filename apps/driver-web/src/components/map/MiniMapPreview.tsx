@@ -1,13 +1,10 @@
 import type { Station } from "@evocharge/types"
-import { CircleMarker, MapContainer, Marker, TileLayer } from "react-leaflet"
+import { CircleMarker, MapContainer, Marker } from "react-leaflet"
 
+import { DynamicTileLayer } from "@/components/map/DynamicTileLayer"
 import { createStationDivIcon } from "@/components/map/createStationIcon"
-import {
-  DARK_TILE_URL,
-  DEFAULT_MAP_ZOOM,
-  DEFAULT_MAP_CENTER,
-  TILE_ATTRIBUTION,
-} from "@/lib/geo"
+import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "@/lib/geo"
+import { useMapStyleStore } from "@/store/mapStyleStore"
 
 interface MiniMapPreviewProps {
   center?: [number, number]
@@ -28,6 +25,8 @@ export function MiniMapPreview({
   userPosition,
   className,
 }: MiniMapPreviewProps) {
+  const mapStyle = useMapStyleStore((state) => state.currentMapStyle)
+
   const mapStations = station
     ? [station, ...stations.filter((entry) => entry.id !== station.id)]
     : stations
@@ -37,19 +36,20 @@ export function MiniMapPreview({
 
   return (
     <div
-      className={`leaflet-map-shell mini-map-preview overflow-hidden rounded-xl ring-1 ring-border/60 ${className ?? "h-56"}`}
+      className={`leaflet-map-shell mini-map-preview map-surface overflow-hidden rounded-xl ring-1 ring-border/60 ${className ?? "h-56"}`}
+      data-map-style={mapStyle}
     >
       <MapContainer
         center={focusCenter}
         zoom={zoom}
         className="leaflet-map-root h-full w-full"
         zoomControl={false}
-        attributionControl={false}
+        attributionControl
         scrollWheelZoom={false}
         dragging={false}
         doubleClickZoom={false}
       >
-        <TileLayer url={DARK_TILE_URL} attribution={TILE_ATTRIBUTION} />
+        <DynamicTileLayer />
         {userPosition ? (
           <CircleMarker
             center={userPosition}

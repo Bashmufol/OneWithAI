@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useMemo } from "react"
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef } from "react"
 import type { Map as LeafletMap } from "leaflet"
 
 import { useMapStore } from "@/components/map/store"
@@ -18,6 +18,9 @@ import { useMapIntentOrchestrator } from "@/hooks/useMapIntentOrchestrator"
 import { useMapViewport } from "@/hooks/useMapViewport"
 import { useRouteNotifications } from "@/hooks/useRouteNotifications"
 import { useSettings } from "@/hooks/useSettings"
+import { useQueryRetry } from "@/hooks/useQueryRetry"
+import { useNavigationStore } from "@/store/navigationStore"
+import { cn } from "@/lib/utils"
 
 const MapContainer = lazy(() =>
   import("@/components/map/MapContainer").then((module) => ({
@@ -27,16 +30,26 @@ const MapContainer = lazy(() =>
 
 export function StationMapPanel() {
   const { debouncedViewport, syncViewport } = useMapViewport(300)
+  const hasLoadedOnceRef = useRef(false)
 
   const {
     data: stations = [],
     isFetching,
     isLoading,
     isError,
+    isRefetchError,
+    isSuccess,
     refetch,
   } = useLiveStationsQuery(debouncedViewport?.bounds)
+  const { onRetry, isRetrying } = useQueryRetry(refetch)
   const pulsingStationIds = usePulsingStationIds()
   const { focusPulseId } = useMapIntentOrchestrator(stations, isLoading)
+
+  if (stations.length > 0 || isSuccess) {
+    hasLoadedOnceRef.current = true
+  }
+
+  const hasLoadedOnce = hasLoadedOnceRef.current
 
   const mergedPulsingStationIds = useMemo(() => {
     if (!focusPulseId) return pulsingStationIds
@@ -54,6 +67,9 @@ export function StationMapPanel() {
   const selectStation = useMapStore((state) => state.selectStation)
   const setHeatmapEnabled = useMapStore((state) => state.setHeatmapEnabled)
   const { isHeatmapDefault } = useSettings()
+  const isNavigationFullscreen = useNavigationStore(
+    (state) => state.isNavigationFullscreen,
+  )
 
   useEffect(() => {
     if (isHeatmapDefault) {
@@ -74,45 +90,43 @@ export function StationMapPanel() {
     [syncViewport],
   )
 
-  if (isLoading && stations.length === 0) {
-    return (
-      <LoadingState variant="map" className="min-h-[min(480px,52vh)] lg:h-full" />
-    )
-  }
+  const showInitialLoading = isLoading && !hasLoadedOnce && stations.length === 0
+  const showBlockingError =
+    isError && !hasLoadedOnce && stations.length === 0 && !isFetching
+  const showBackgroundSyncError = isRefetchError && stations.length > 0
 
-  const showFetchError = isError && stations.length === 0
+  const mapSectionClassName = cn(
+    "relative min-h-[min(480px,52vh)] lg:min-h-0 lg:h-full",
+    isNavigationFullscreen && "min-h-0",
+  )
+
+  const mapContent = showInitialLoading ? (
+    <LoadingState variant="map" className="h-full" />
+  ) : showBlockingError ? (
+    <ErrorState className="h-full" onRetry={onRetry} isRetrying={isRetrying} />
+  ) : (
+    <Suspense fallback={<LoadingState variant="map" className="h-full" />}>
+      <MapContainer
+        stations={filteredStations}
+        isFetching={isFetching && hasLoadedOnce}
+        pulsingStationIds={mergedPulsingStationIds}
+        onViewportSync={handleViewportSync}
+        className="h-full min-h-0"
+      />
+    </Suspense>
+  )
+
+  if (isNavigationFullscreen) {
+    return <div className="h-full min-h-0">{mapContent}</div>
+  }
 
   return (
     <div className="grid min-h-0 gap-4 lg:h-full lg:grid-cols-[minmax(0,1.4fr)_minmax(300px,380px)] lg:grid-rows-1">
-      <section className="relative min-h-[min(480px,52vh)] lg:min-h-0 lg:h-full">
-        {showFetchError ? (
-          <ErrorState
-            className="h-full"
-            onRetry={() => {
-              void refetch()
-            }}
-          />
-        ) : (
-          <Suspense fallback={<LoadingState variant="map" className="h-full" />}>
-            <MapContainer
-              stations={filteredStations}
-              isFetching={isFetching}
-              pulsingStationIds={mergedPulsingStationIds}
-              onViewportSync={handleViewportSync}
-              className="h-full"
-            />
-          </Suspense>
-        )}
-      </section>
+      <section className={mapSectionClassName}>{mapContent}</section>
 
       <aside className="map-sidebar-scroll flex min-w-0 flex-col gap-3 lg:max-h-full lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
-        {isError && stations.length > 0 ? (
-          <DataFetchError
-            compact
-            onRetry={() => {
-              void refetch()
-            }}
-          />
+        {showBackgroundSyncError ? (
+          <DataFetchError compact onRetry={onRetry} isRetrying={isRetrying} />
         ) : null}
         <BatteryRoutePanel
           activeRoute={activeRoute}
@@ -122,7 +136,10 @@ export function StationMapPanel() {
           }}
         />
         <StationFilters stations={stations} />
-        <StationList stations={filteredStations} isLoading={isLoading} />
+        <StationList
+          stations={filteredStations}
+          isLoading={isLoading && !hasLoadedOnce}
+        />
       </aside>
     </div>
   )

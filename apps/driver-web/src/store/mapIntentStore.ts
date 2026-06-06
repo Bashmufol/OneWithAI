@@ -18,6 +18,8 @@ export interface RouteDestination {
   kind: RouteDestinationKind
 }
 
+export type RouteGeometrySource = "osrm" | "fallback"
+
 interface MapIntentStore {
   mode: MapMode
   selectedStationId?: string
@@ -26,10 +28,24 @@ interface MapIntentStore {
   routeTo?: MapCoords
   routeDestination: RouteDestination | null
   activeRoute: { from: MapCoords; to: MapCoords } | null
+  routeGeometry: MapCoords[] | null
+  routeGeometryKey: string | null
+  routeDistanceMeters: number | null
+  routeDurationSeconds: number | null
+  routeGeometrySource: RouteGeometrySource | null
+  isRouteGeometryLoading: boolean
   setFocus: (stationId: string, coords: MapCoords) => void
   setRoute: (from: MapCoords, to: MapCoords) => void
   setRouteDestination: (destination: RouteDestination | null) => void
   setActiveRoute: (from: MapCoords, to: MapCoords) => void
+  setRouteGeometry: (input: {
+    coordinates: MapCoords[]
+    distanceMeters: number
+    durationSeconds: number
+    source: RouteGeometrySource
+    key: string
+  }) => void
+  clearRouteGeometry: () => void
   clearActiveRoute: () => void
   clearIntent: () => void
 }
@@ -42,6 +58,12 @@ export const useMapIntentStore = create<MapIntentStore>((set) => ({
   routeTo: undefined,
   routeDestination: null,
   activeRoute: null,
+  routeGeometry: null,
+  routeGeometryKey: null,
+  routeDistanceMeters: null,
+  routeDurationSeconds: null,
+  routeGeometrySource: null,
+  isRouteGeometryLoading: false,
 
   setFocus: (selectedStationId, focusCoords) =>
     set({
@@ -51,6 +73,12 @@ export const useMapIntentStore = create<MapIntentStore>((set) => ({
       routeFrom: undefined,
       routeTo: undefined,
       activeRoute: null,
+      routeGeometry: null,
+      routeGeometryKey: null,
+      routeDistanceMeters: null,
+      routeDurationSeconds: null,
+      routeGeometrySource: null,
+      isRouteGeometryLoading: false,
     }),
 
   setRoute: (routeFrom, routeTo) =>
@@ -64,12 +92,51 @@ export const useMapIntentStore = create<MapIntentStore>((set) => ({
 
   setRouteDestination: (routeDestination) => set({ routeDestination }),
 
-  setActiveRoute: (from, to) => set({ activeRoute: { from, to } }),
+  setActiveRoute: (from, to) =>
+    set({
+      activeRoute: { from, to },
+      routeGeometry: null,
+      routeGeometryKey: null,
+      routeDistanceMeters: null,
+      routeDurationSeconds: null,
+      routeGeometrySource: null,
+    }),
+
+  setRouteGeometry: ({
+    coordinates,
+    distanceMeters,
+    durationSeconds,
+    source,
+    key,
+  }) =>
+    set({
+      routeGeometry: coordinates,
+      routeGeometryKey: key,
+      routeDistanceMeters: distanceMeters,
+      routeDurationSeconds: durationSeconds,
+      routeGeometrySource: source,
+    }),
+
+  clearRouteGeometry: () =>
+    set({
+      routeGeometry: null,
+      routeGeometryKey: null,
+      routeDistanceMeters: null,
+      routeDurationSeconds: null,
+      routeGeometrySource: null,
+      isRouteGeometryLoading: false,
+    }),
 
   clearActiveRoute: () =>
     set({
       activeRoute: null,
       routeDestination: null,
+      routeGeometry: null,
+      routeGeometryKey: null,
+      routeDistanceMeters: null,
+      routeDurationSeconds: null,
+      routeGeometrySource: null,
+      isRouteGeometryLoading: false,
     }),
 
   clearIntent: () =>

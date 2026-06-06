@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { NuqsAdapter } from "nuqs/adapters/react-router/v7"
 
 import { LocationBootstrap } from "@/components/location/LocationBootstrap"
+import { NavigationBootstrap } from "@/components/navigation/NavigationBootstrap"
 import { LocationPermissionHost } from "@/components/location/LocationPermissionHost"
 import { NotificationEventBridge } from "@/components/notifications/NotificationEventBridge"
 import { NetworkBootstrap } from "@/components/network/NetworkBootstrap"
@@ -12,7 +13,9 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 30_000,
+      staleTime: 60_000,
+      refetchOnWindowFocus: false,
+      retry: 1,
     },
   },
 })
@@ -25,6 +28,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
           <SettingsRuntime />
           <NetworkBootstrap />
           <LocationBootstrap />
+          <NavigationBootstrap />
           <LocationPermissionHost />
           <NotificationEventBridge />
           <NetworkSimulationRunner />

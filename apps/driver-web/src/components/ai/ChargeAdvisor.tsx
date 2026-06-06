@@ -21,6 +21,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useLiveStationsQuery } from "@/hooks/useLiveStationsQuery"
+import { useQueryRetry } from "@/hooks/useQueryRetry"
 import { useUserLocation } from "@/hooks/useUserLocation"
 import {
   getAdvisorRecommendation,
@@ -237,8 +238,10 @@ export function ChargeAdvisor() {
     data: stations = [],
     isLoading,
     isError,
+    isRefetchError,
     refetch,
   } = useLiveStationsQuery()
+  const { onRetry, isRetrying } = useQueryRetry(refetch)
   const { safeLocation, usingFallback } = useUserLocation()
   const batteryLevel = useRouteStore((state) => state.batteryLevel)
   const activeRoute = useMapIntentStore((state) => state.activeRoute)
@@ -344,24 +347,15 @@ export function ChargeAdvisor() {
 
   if (isError && stations.length === 0) {
     return (
-      <ErrorState
-        onRetry={() => {
-          void refetch()
-        }}
-      />
+      <ErrorState onRetry={onRetry} isRetrying={isRetrying} />
     )
   }
 
   return (
     <Card className="flex min-h-[min(640px,75vh)] flex-col border-border/80 bg-card ring-border/60">
-      {isError ? (
+      {isRefetchError && stations.length > 0 ? (
         <div className="border-b border-border/60 p-4">
-          <DataFetchError
-            compact
-            onRetry={() => {
-              void refetch()
-            }}
-          />
+          <DataFetchError compact onRetry={onRetry} isRetrying={isRetrying} />
         </div>
       ) : null}
       <CardHeader className="border-b border-border/60 pb-4">

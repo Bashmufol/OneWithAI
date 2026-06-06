@@ -5,6 +5,7 @@ import { StationMapPanel } from "@/components/stations/StationMapPanel"
 import { Badge } from "@/components/ui/badge"
 import { useSettings } from "@/hooks/useSettings"
 import { fadeIn, slideUp } from "@/lib/motion"
+import { useNavigationStore } from "@/store/navigationStore"
 import { cn } from "@/lib/utils"
 
 const STATUS_BADGES = [
@@ -33,6 +34,17 @@ const CAPABILITIES = [
 
 export function MapPage() {
   const { isReduceMotion } = useSettings()
+  const isNavigationFullscreen = useNavigationStore(
+    (state) => state.isNavigationFullscreen,
+  )
+
+  if (isNavigationFullscreen) {
+    return (
+      <div className="h-full min-h-0">
+        <StationMapPanel />
+      </div>
+    )
+  }
 
   return (
     <div

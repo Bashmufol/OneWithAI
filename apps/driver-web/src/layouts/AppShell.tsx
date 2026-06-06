@@ -15,6 +15,7 @@ import { SidebarNav } from "@/components/layout/SidebarNav"
 import { StationSearchInput } from "@/components/stations/StationSearchInput"
 import { useSettings } from "@/hooks/useSettings"
 import { useNetworkStore } from "@/store/networkStore"
+import { useNavigationStore } from "@/store/navigationStore"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -54,6 +55,19 @@ export function AppShell() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
   const { isDemoMode, setDemoMode } = useSettings()
   const isOnline = useNetworkStore((state) => state.isOnline)
+  const isNavigationFullscreen = useNavigationStore(
+    (state) => state.isNavigationFullscreen,
+  )
+
+  if (isNavigationFullscreen) {
+    return (
+      <div className="fixed inset-0 z-50 flex flex-col bg-background">
+        <main className="min-h-0 flex-1 overflow-hidden">
+          <AnimatedOutlet />
+        </main>
+      </div>
+    )
+  }
 
   return (
     <div className="flex h-svh bg-background text-foreground">
