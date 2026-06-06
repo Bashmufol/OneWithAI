@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useEffect, useMemo, useRef } from "react"
+import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from "react"
 import type { Map as LeafletMap } from "leaflet"
 
 import { useMapStore } from "@/components/map/store"
@@ -30,7 +30,7 @@ const MapContainer = lazy(() =>
 
 export function StationMapPanel() {
   const { debouncedViewport, syncViewport } = useMapViewport(300)
-  const hasLoadedOnceRef = useRef(false)
+  const [hasLoadedOnce, setHasLoadedOnce] = useState(false)
 
   const {
     data: stations = [],
@@ -45,11 +45,11 @@ export function StationMapPanel() {
   const pulsingStationIds = usePulsingStationIds()
   const { focusPulseId } = useMapIntentOrchestrator(stations, isLoading)
 
-  if (stations.length > 0 || isSuccess) {
-    hasLoadedOnceRef.current = true
-  }
-
-  const hasLoadedOnce = hasLoadedOnceRef.current
+  useEffect(() => {
+    if (stations.length > 0 || isSuccess) {
+      setHasLoadedOnce(true)
+    }
+  }, [isSuccess, stations.length])
 
   const mergedPulsingStationIds = useMemo(() => {
     if (!focusPulseId) return pulsingStationIds

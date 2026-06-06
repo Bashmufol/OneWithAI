@@ -1,10 +1,9 @@
-import { useEffect, useMemo, useRef } from "react"
+import { useEffect, useMemo, useState } from "react"
 
 import { useRouteStore } from "@/components/route/store"
 import { useDemandPoints } from "@/hooks/useDemandPoints"
 import { useUserLocation } from "@/hooks/useUserLocation"
 import type { StationWithEvoScore } from "@/lib/evoscore"
-import { useLiveNetworkStore } from "@/lib/liveNetworkStore"
 import {
   getBestChargingStops,
   type ChargingRouteResult,
@@ -24,14 +23,8 @@ export function useChargingRoute(
   const routeDestination = useMapIntentStore((state) => state.routeDestination)
   const { safeLocation } = useUserLocation()
 
-  const pulseRevision = useLiveNetworkStore((state) => state.pulseEvents.length)
-  const statusRevision = useLiveNetworkStore(
-    (state) => Object.keys(state.statusById).length,
-  )
-  const statusById = useLiveNetworkStore((state) => state.statusById)
-
   const demandPoints = useDemandPoints(stations)
-  const previousPrimaryIdRef = useRef<string | null>(null)
+  const [previousPrimaryIds, setPreviousPrimaryIds] = useState<string[]>([])
 
   const origin = useMemo(
     () => ({
@@ -66,9 +59,7 @@ export function useChargingRoute(
         demandPoints,
       },
       {
-        previousStationIds: previousPrimaryIdRef.current
-          ? [previousPrimaryIdRef.current]
-          : [],
+        previousStationIds: previousPrimaryIds,
       },
     )
 
@@ -82,14 +73,13 @@ export function useChargingRoute(
     destination,
     isRouteEnabled,
     origin,
-    pulseRevision,
+    previousPrimaryIds,
     stations,
-    statusById,
-    statusRevision,
   ])
 
   useEffect(() => {
-    previousPrimaryIdRef.current = activeRoute?.primaryStationId ?? null
+    const id = activeRoute?.primaryStationId ?? null
+    setPreviousPrimaryIds(id ? [id] : [])
   }, [activeRoute?.primaryStationId])
 
   return activeRoute

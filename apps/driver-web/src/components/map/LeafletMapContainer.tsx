@@ -1,6 +1,6 @@
 import type { Station } from "@evocharge/types"
 import { motion } from "framer-motion"
-import { useMemo, useRef, useState, useEffect } from "react"
+import { useRef, useState } from "react"
 import { MapContainer as LeafletMap, useMapEvents } from "react-leaflet"
 import type { Map as LeafletMapType } from "leaflet"
 
@@ -64,8 +64,20 @@ export function LeafletMapContainer({
   className,
 }: LeafletMapContainerProps) {
   const mapRef = useRef<LeafletMapType | null>(null)
-  const initialCenterRef = useRef<[number, number] | null>(null)
-  const [mapTilesDegraded, setMapTilesDegraded] = useState(false)
+  const locationStatus = useLocationStore((state) => state.status)
+  const locationCoords = useLocationStore((state) => state.coords)
+  const lastKnownCoords = useLocationStore((state) => state.lastKnownCoords)
+  const fallbackCoords = useLocationStore((state) => state.fallbackCoords)
+  const [initialCenter] = useState<[number, number]>(() => {
+    const safe = getSafeLocation({
+      status: locationStatus,
+      coords: locationCoords,
+      lastKnownCoords,
+      fallbackCoords,
+    })
+    return [safe.lat, safe.lng]
+  })
+  const [degradedForStyle, setDegradedForStyle] = useState<string | null>(null)
   const selectStation = useMapStore((state) => state.selectStation)
   const highlightedStationId = useMapStore(
     (state) => state.highlightedStationId,
@@ -75,10 +87,6 @@ export function LeafletMapContainer({
   const demandPoints = useDemandPoints(stations as StationWithEvoScore[])
   const { isReduceMotion } = useSettings()
   const fadeVariants = getReducedMotionVariants(fadeIn)
-  const locationStatus = useLocationStore((state) => state.status)
-  const locationCoords = useLocationStore((state) => state.coords)
-  const lastKnownCoords = useLocationStore((state) => state.lastKnownCoords)
-  const fallbackCoords = useLocationStore((state) => state.fallbackCoords)
   const navigationMode = useNavigationStore((state) => state.navigationMode)
   const isNavigationFullscreen = useNavigationStore(
     (state) => state.isNavigationFullscreen,
@@ -88,23 +96,7 @@ export function LeafletMapContainer({
     (state) => state.isRouteGeometryLoading,
   )
 
-  const mapCenter = useMemo<[number, number]>(() => {
-    const safe = getSafeLocation({
-      status: locationStatus,
-      coords: locationCoords,
-      lastKnownCoords,
-      fallbackCoords,
-    })
-    return [safe.lat, safe.lng]
-  }, [locationStatus, locationCoords, lastKnownCoords, fallbackCoords])
-
-  if (!initialCenterRef.current) {
-    initialCenterRef.current = mapCenter
-  }
-
-  useEffect(() => {
-    setMapTilesDegraded(false)
-  }, [mapStyle])
+  const mapTilesDegraded = degradedForStyle === mapStyle
 
   return (
     <>
@@ -126,14 +118,14 @@ export function LeafletMapContainer({
           )}
         >
           <LeafletMap
-            center={initialCenterRef.current}
+            center={initialCenter}
             zoom={DEFAULT_MAP_ZOOM}
             className="leaflet-map-root h-full w-full"
             zoomControl={false}
             attributionControl
           >
             <DynamicTileLayer />
-            <MapTileErrorListener onTileError={() => setMapTilesDegraded(true)} />
+            <MapTileErrorListener onTileError={() => setDegradedForStyle(mapStyle)} />
             <MapRefCapture mapRef={mapRef} />
             <ViewportSync onSync={onViewportSync} />
             <MapFlyTo />

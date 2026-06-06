@@ -68,10 +68,7 @@ export function DemandHeatmapLayer({
   const map = useMap()
   const layerRef = useRef<HeatLayerWithCanvas | null>(null)
   const fadeFrameRef = useRef<number | null>(null)
-  const pointsRef = useRef(points)
   const [mapReady, setMapReady] = useState(false)
-
-  pointsRef.current = points
 
   const setCanvasOpacity = useCallback((opacity: number) => {
     const canvas = getCanvas(layerRef.current)
@@ -82,8 +79,8 @@ export function DemandHeatmapLayer({
   const applyHeatData = useCallback(() => {
     const layer = layerRef.current
     if (!layer || !isMapContainerReady(map)) return
-    safeSetHeatLatLngs(layer, map, toHeatCoords(pointsRef.current))
-  }, [map])
+    safeSetHeatLatLngs(layer, map, toHeatCoords(points))
+  }, [map, points])
 
   const animateOpacity = useCallback(
     (from: number, to: number) => {

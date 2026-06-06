@@ -20,7 +20,6 @@ import {
   getTierLabel,
 } from "@/lib/evoscoreAnalytics"
 import { getEvoScoreExplanation } from "@/lib/evoscore"
-import { useLiveNetworkStore } from "@/lib/liveNetworkStore"
 import { slideUp, staggerContainer } from "@/lib/motion"
 import { cn } from "@/lib/utils"
 
@@ -41,16 +40,14 @@ export function EvoScorePage() {
   } = useLiveStationsQuery()
   const { onRetry, isRetrying } = useQueryRetry(refetch)
 
-  const pulseRevision = useLiveNetworkStore((state) => state.pulseEvents.length)
-
   const distribution = useMemo(
     () => getEvoScoreDistribution(stations),
-    [stations, pulseRevision],
+    [stations],
   )
 
   const comparisons = useMemo(
     () => buildEvoScoreComparisons(stations, 3),
-    [stations, pulseRevision],
+    [stations],
   )
 
   const maxBucket = Math.max(

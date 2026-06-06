@@ -56,7 +56,7 @@ export function LocationPermissionModal() {
     (state) => state.enableFallbackAccess,
   )
   const { status, requestLocationPermission, isLoading } = useUserLocation()
-  const useFallbackLocation = useLocationStore(
+  const applyFallbackLocation = useLocationStore(
     (state) => state.useFallbackLocation,
   )
 
@@ -73,7 +73,7 @@ export function LocationPermissionModal() {
   }
 
   const handleContinueWithout = () => {
-    useFallbackLocation()
+    applyFallbackLocation()
     enableFallbackAccess()
     closePermissionModal()
   }

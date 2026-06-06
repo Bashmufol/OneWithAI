@@ -1,7 +1,6 @@
 import { useMemo } from "react"
 import { useShallow } from "zustand/react/shallow"
 
-import { useSettingsStore } from "@/lib/settingsStore"
 import {
   getDropdownNotifications,
   getFilteredPageNotifications,
@@ -12,7 +11,6 @@ import {
 
 export function useNotifications() {
   const notifications = useNotificationStore((state) => state.notifications)
-  const notificationLevel = useSettingsStore((state) => state.notificationLevel)
 
   const pageFilters = useNotificationStore(useShallow((state) => state.pageFilters))
   const pageVisibleCount = useNotificationStore((state) => state.pageVisibleCount)
@@ -49,7 +47,7 @@ export function useNotifications() {
       unreadCount: counts.unread,
       unreadDropdownCount,
     }
-  }, [notifications, notificationLevel, pageFilters, pageVisibleCount])
+  }, [notifications, pageFilters, pageVisibleCount])
 
   return {
     notifications,

@@ -1,5 +1,5 @@
 import type { Map as LeafletMap } from "leaflet"
-import { useEffect } from "react"
+import { useCallback, useEffect } from "react"
 
 import { useUserLocation } from "@/hooks/useUserLocation"
 import { DEFAULT_MAP_ZOOM } from "@/lib/geo"
@@ -27,13 +27,13 @@ export function useMapControlActions(
     fallbackCoords,
   })
 
-  const recenterToSafeLocation = () => {
+  const recenterToSafeLocation = useCallback(() => {
     mapRef.current?.setView(
       [safeCenter.lat, safeCenter.lng],
       DEFAULT_MAP_ZOOM,
       { animate: true },
     )
-  }
+  }, [mapRef, safeCenter.lat, safeCenter.lng])
 
   const handleMyLocation = () => {
     if (status === "granted") {
@@ -48,7 +48,7 @@ export function useMapControlActions(
     if (status === "granted" && triggerSource === "map") {
       recenterToSafeLocation()
     }
-  }, [status, triggerSource])
+  }, [recenterToSafeLocation, status, triggerSource])
 
   return {
     recenterToSafeLocation,
