@@ -13,12 +13,6 @@ export const DEFAULT_MAP_ZOOM = 7
 /** Zoom when centered on a user's live GPS position */
 export const LOCAL_MAP_ZOOM = 12
 
-export const DARK_TILE_URL =
-  "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
-
-export const TILE_ATTRIBUTION =
-  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-
 export interface MapBounds {
   north: number
   south: number
@@ -36,10 +30,10 @@ export function isStationInBounds(station: Station, bounds: MapBounds): boolean 
   )
 }
 
-export function filterStationsByBounds(
-  stations: Station[],
+export function filterStationsByBounds<T extends Station>(
+  stations: T[],
   bounds: MapBounds,
-): Station[] {
+): T[] {
   return stations.filter((station) => isStationInBounds(station, bounds))
 }
 

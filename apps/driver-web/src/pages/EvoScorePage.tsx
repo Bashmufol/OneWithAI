@@ -8,8 +8,9 @@ import { PageSection } from "@/components/ev/PageSection"
 import { EvoScoreBadge } from "@/components/stations/EvoScoreBadge"
 import { EvoScoreBreakdownContent } from "@/components/stations/EvoScoreBreakdown"
 import { useLiveStationsQuery } from "@/hooks/useLiveStationsQuery"
+import { useQueryRetry } from "@/hooks/useQueryRetry"
+import { InlineErrorState } from "@/components/errors/InlineErrorState"
 import { ErrorState } from "@/components/ui/ErrorState"
-import { DataFetchError } from "@/components/ui/DataFetchError"
 import { LoadingState } from "@/components/ui/LoadingState"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -19,7 +20,6 @@ import {
   getTierLabel,
 } from "@/lib/evoscoreAnalytics"
 import { getEvoScoreExplanation } from "@/lib/evoscore"
-import { useLiveNetworkStore } from "@/lib/liveNetworkStore"
 import { slideUp, staggerContainer } from "@/lib/motion"
 import { cn } from "@/lib/utils"
 
@@ -35,19 +35,19 @@ export function EvoScorePage() {
     data: stations = [],
     isLoading,
     isError,
+    isRefetchError,
     refetch,
   } = useLiveStationsQuery()
-
-  const pulseRevision = useLiveNetworkStore((state) => state.pulseEvents.length)
+  const { onRetry, isRetrying } = useQueryRetry(refetch)
 
   const distribution = useMemo(
     () => getEvoScoreDistribution(stations),
-    [stations, pulseRevision],
+    [stations],
   )
 
   const comparisons = useMemo(
     () => buildEvoScoreComparisons(stations, 3),
-    [stations, pulseRevision],
+    [stations],
   )
 
   const maxBucket = Math.max(
@@ -75,9 +75,8 @@ export function EvoScorePage() {
       <PageSection title="EvoScore" description="Unable to load score data.">
         <ErrorState
           className="md:col-span-2 lg:col-span-3"
-          onRetry={() => {
-            void refetch()
-          }}
+          onRetry={onRetry}
+          isRetrying={isRetrying}
         />
       </PageSection>
     )
@@ -89,13 +88,9 @@ export function EvoScorePage() {
       description="Understand how EvoCharge ranks stations using live availability, demand pressure, and reliability."
       badge="Live Intelligence"
     >
-      {isError ? (
+      {isRefetchError && stations.length > 0 ? (
         <motion.div variants={slideUp} className="md:col-span-2 lg:col-span-3">
-          <DataFetchError
-            onRetry={() => {
-              void refetch()
-            }}
-          />
+          <InlineErrorState onRetry={onRetry} isRetrying={isRetrying} />
         </motion.div>
       ) : null}
       <motion.div variants={slideUp} className="md:col-span-2 lg:col-span-3">

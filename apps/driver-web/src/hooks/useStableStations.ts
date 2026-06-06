@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react"
+import { useMemo } from "react"
 
 import {
   enrichStationWithEvoScore,
@@ -6,32 +6,21 @@ import {
 } from "@/lib/evoscore"
 import { useLiveNetworkStore } from "@/lib/liveNetworkStore"
 
-function buildStatusRevision(
-  statusById: Record<string, string>,
-): string {
-  return Object.entries(statusById)
-    .sort(([left], [right]) => left.localeCompare(right))
-    .map(([id, status]) => `${id}:${status}`)
-    .join("|")
-}
+const stationCache = new Map<
+  string,
+  { revision: string; station: StationWithEvoScore }
+>()
 
 export function useStableStations(stations: StationWithEvoScore[]) {
   const statusById = useLiveNetworkStore((state) => state.statusById)
-  const cacheRef = useRef(
-    new Map<string, { revision: string; station: StationWithEvoScore }>(),
-  )
-
-  const statusKey = buildStatusRevision(statusById)
 
   return useMemo(() => {
-    const cache = cacheRef.current
-
     return stations.map((station) => {
       const liveStatus = statusById[station.id]
       const effectiveStatus = liveStatus ?? station.status
       const revision = `${station.id}:${effectiveStatus}`
 
-      const cached = cache.get(station.id)
+      const cached = stationCache.get(station.id)
       if (cached?.revision === revision) {
         return cached.station
       }
@@ -41,8 +30,8 @@ export function useStableStations(stations: StationWithEvoScore[]) {
           ? enrichStationWithEvoScore({ ...station, status: liveStatus })
           : station
 
-      cache.set(station.id, { revision, station: next })
+      stationCache.set(station.id, { revision, station: next })
       return next
     })
-  }, [stations, statusKey, statusById])
+  }, [stations, statusById])
 }

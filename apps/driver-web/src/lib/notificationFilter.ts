@@ -1,8 +1,7 @@
 import type { NotificationLevel } from "@/lib/settingsStore"
+import type { NotificationSeverity } from "@/types/notifications"
 
-import type { NotificationSeverity } from "@/lib/notificationStore"
-
-export type { NotificationSeverity }
+export type { NotificationSeverity } from "@/types/notifications"
 
 export function passesNotificationLevel(
   level: NotificationLevel,

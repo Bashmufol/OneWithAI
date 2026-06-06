@@ -1,7 +1,7 @@
 import type { StationStatus } from "@evocharge/types"
 import { create } from "zustand"
 
-import { useMapStore } from "@/components/map/store"
+import { useMapStore } from "@/store/mapStore"
 import { enrichStationWithEvoScore, type StationWithEvoScore } from "@/lib/evoscore"
 import type { PulseEvent } from "@/lib/networkPulseEngine"
 

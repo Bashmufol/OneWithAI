@@ -10,8 +10,9 @@ import { requestMapRouteWithDestination } from "@/lib/mapIntent"
 import { EvoScoreBadge } from "@/components/stations/EvoScoreBadge"
 import { useUserLocation } from "@/hooks/useUserLocation"
 import { useLiveStationsQuery } from "@/hooks/useLiveStationsQuery"
+import { useQueryRetry } from "@/hooks/useQueryRetry"
+import { InlineErrorState } from "@/components/errors/InlineErrorState"
 import { ErrorState } from "@/components/ui/ErrorState"
-import { DataFetchError } from "@/components/ui/DataFetchError"
 import { LoadingState } from "@/components/ui/LoadingState"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -48,8 +49,10 @@ export function NearMePage() {
     data: stations = [],
     isLoading: isStationsLoading,
     isError,
+    isRefetchError,
     refetch,
   } = useLiveStationsQuery()
+  const { onRetry, isRetrying } = useQueryRetry(refetch)
 
   const nearbyStations = useMemo(
     () => sortNearbyStations(stations, safeLocation.lat, safeLocation.lng),
@@ -88,9 +91,8 @@ export function NearMePage() {
       <PageSection title="Near Me" description="Unable to load nearby stations.">
         <ErrorState
           className="md:col-span-2 lg:col-span-3"
-          onRetry={() => {
-            void refetch()
-          }}
+          onRetry={onRetry}
+          isRetrying={isRetrying}
         />
       </PageSection>
     )
@@ -103,13 +105,9 @@ export function NearMePage() {
       badge="Feature 4"
       badgeVariant="outline"
     >
-      {isError ? (
+      {isRefetchError && stations.length > 0 ? (
         <motion.div variants={slideUp} className="md:col-span-2 lg:col-span-3">
-          <DataFetchError
-            onRetry={() => {
-              void refetch()
-            }}
-          />
+          <InlineErrorState onRetry={onRetry} isRetrying={isRetrying} />
         </motion.div>
       ) : null}
       <motion.div variants={slideUp} className="md:col-span-2 lg:col-span-3">

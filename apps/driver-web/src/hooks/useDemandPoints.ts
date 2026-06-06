@@ -41,6 +41,6 @@ export function useDemandPoints(stations: StationWithEvoScore[]) {
 
   return useMemo(
     () => computeDemandPoints(stations, tick),
-    [stations, tick, stationSignature],
+    [stations, tick],
   )
 }

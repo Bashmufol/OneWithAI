@@ -7,6 +7,7 @@ interface DataFetchErrorProps {
   title?: string
   description?: string
   onRetry?: () => void
+  isRetrying?: boolean
   className?: string
   compact?: boolean
 }
@@ -15,6 +16,7 @@ export function DataFetchError({
   title = "Unable to load data",
   description = "Something went wrong while fetching station data. Your connection may still be fine — try again.",
   onRetry,
+  isRetrying = false,
   className,
   compact = false,
 }: DataFetchErrorProps) {
@@ -40,9 +42,12 @@ export function DataFetchError({
             size="sm"
             className="mt-2 h-8"
             onClick={onRetry}
+            disabled={isRetrying}
           >
-            <RefreshCw className="size-3.5" />
-            Retry
+            <RefreshCw
+              className={cn("size-3.5", isRetrying && "animate-spin")}
+            />
+            {isRetrying ? "Retrying…" : "Retry"}
           </Button>
         ) : null}
       </div>

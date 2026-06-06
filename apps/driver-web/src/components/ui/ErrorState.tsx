@@ -1,3 +1,4 @@
+import { FRIENDLY_INLINE } from "@/lib/errorUtils"
 import { AlertTriangle, RefreshCw, Zap } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -8,13 +9,15 @@ interface ErrorStateProps {
   title?: string
   description?: string
   onRetry?: () => void
+  isRetrying?: boolean
   className?: string
 }
 
 export function ErrorState({
-  title = "Unable to load data",
-  description = "Something went wrong while fetching station data. Try again.",
+  title = FRIENDLY_INLINE.title,
+  description = FRIENDLY_INLINE.description,
   onRetry,
+  isRetrying = false,
   className,
 }: ErrorStateProps) {
   return (
@@ -34,9 +37,14 @@ export function ErrorState({
           <p className="text-sm text-muted-foreground">{description}</p>
         </div>
         {onRetry ? (
-          <Button type="button" variant="outline" onClick={onRetry}>
-            <RefreshCw className="size-4" />
-            Retry
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onRetry}
+            disabled={isRetrying}
+          >
+            <RefreshCw className={cn("size-4", isRetrying && "animate-spin")} />
+            {isRetrying ? "Retrying…" : "Retry"}
           </Button>
         ) : null}
       </CardContent>

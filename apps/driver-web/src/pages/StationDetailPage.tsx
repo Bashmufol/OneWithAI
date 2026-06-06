@@ -17,6 +17,7 @@ import { EvoScoreBadge } from "@/components/stations/EvoScoreBadge"
 import { EvoScoreBreakdownContent } from "@/components/stations/EvoScoreBreakdown"
 import { useChargingRoute } from "@/hooks/useChargingRoute"
 import { useLiveStationsQuery } from "@/hooks/useLiveStationsQuery"
+import { useQueryRetry } from "@/hooks/useQueryRetry"
 import { useUserLocation } from "@/hooks/useUserLocation"
 import { ErrorState } from "@/components/ui/ErrorState"
 import { LoadingState } from "@/components/ui/LoadingState"
@@ -65,6 +66,7 @@ export function StationDetailPage() {
     isError,
     refetch,
   } = useLiveStationsQuery()
+  const { onRetry, isRetrying } = useQueryRetry(refetch)
 
   const pulseEvents = useLiveNetworkStore((state) => state.pulseEvents)
   const recentlyChanged = useLiveNetworkStore((state) => state.recentlyChanged)
@@ -99,9 +101,8 @@ export function StationDetailPage() {
       <PageSection title="Station Detail" description="Unable to load station.">
         <ErrorState
           className="md:col-span-2 lg:col-span-3"
-          onRetry={() => {
-            void refetch()
-          }}
+          onRetry={onRetry}
+          isRetrying={isRetrying}
         />
       </PageSection>
     )

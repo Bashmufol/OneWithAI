@@ -107,13 +107,16 @@ export const ClusteredStationMarkers = memo(function ClusteredStationMarkers({
   }, [stations, highlightedStationId, pulsingStationIds, map])
 
   useEffect(() => {
+    const markers = markersRef.current
+    const signatures = signaturesRef.current
+
     return () => {
       if (clusterGroupRef.current) {
         map.removeLayer(clusterGroupRef.current)
         clusterGroupRef.current = null
       }
-      markersRef.current.clear()
-      signaturesRef.current.clear()
+      markers.clear()
+      signatures.clear()
     }
   }, [map])
 

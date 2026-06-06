@@ -1,4 +1,5 @@
-import { useMapStore } from "@/components/map/store"
+import { useMapStore } from "@/store/mapStore"
+import { resolveRoadRouteForIntent } from "@/lib/roadRouteResolver"
 import type { MapCoords, RouteDestination } from "@/store/mapIntentStore"
 import { useMapIntentStore } from "@/store/mapIntentStore"
 
@@ -17,11 +18,16 @@ export function applyRouteDestination(
     lat: destination.lat,
     lng: destination.lng,
   })
+  void resolveRoadRouteForIntent(from, {
+    lat: destination.lat,
+    lng: destination.lng,
+  })
 }
 
 export function requestMapRoute(from: MapCoords, to: MapCoords) {
   useMapStore.getState().setSelectedStation(null)
   useMapIntentStore.getState().setRoute(from, to)
+  void resolveRoadRouteForIntent(from, to)
 }
 
 export function requestMapRouteWithDestination(

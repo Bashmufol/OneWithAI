@@ -1,22 +1,27 @@
-import { Crosshair, Flame, Navigation } from "lucide-react"
+import { Crosshair, Flame, Globe, Moon, Navigation, Satellite } from "lucide-react"
 import type { Map as LeafletMap } from "leaflet"
-import { useEffect } from "react"
 
 import { useMapStore } from "@/components/map/store"
-import { useUserLocation } from "@/hooks/useUserLocation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Toggle } from "@/components/ui/toggle"
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { DEFAULT_MAP_ZOOM } from "@/lib/geo"
-import { getSafeLocation } from "@/lib/safeLocation"
-import { useLocationStore } from "@/store/locationStore"
-import { useLocationUIStore } from "@/store/locationUIStore"
+import { useMapControlActions } from "@/hooks/useMapControlActions"
+import type { MapStyle } from "@/lib/mapTiles"
+import { MAP_STYLE_OPTIONS } from "@/lib/mapTiles"
+import { useMapStyleStore } from "@/store/mapStyleStore"
 import { cn } from "@/lib/utils"
+
+const MAP_STYLE_ICONS: Record<MapStyle, typeof Globe> = {
+  standard: Globe,
+  dark: Moon,
+  satellite: Satellite,
+}
 
 interface MapControlsProps {
   mapRef: React.RefObject<LeafletMap | null>
@@ -25,48 +30,55 @@ interface MapControlsProps {
 export function MapControls({ mapRef }: MapControlsProps) {
   const heatmapEnabled = useMapStore((state) => state.heatmapEnabled)
   const setHeatmapEnabled = useMapStore((state) => state.setHeatmapEnabled)
-  const locationStatus = useLocationStore((state) => state.status)
-  const locationCoords = useLocationStore((state) => state.coords)
-  const lastKnownCoords = useLocationStore((state) => state.lastKnownCoords)
-  const fallbackCoords = useLocationStore((state) => state.fallbackCoords)
-  const { status } = useUserLocation()
-  const openPermissionModal = useLocationUIStore(
-    (state) => state.openPermissionModal,
-  )
-  const triggerSource = useLocationUIStore((state) => state.triggerSource)
-
-  const safeCenter = getSafeLocation({
-    status: locationStatus,
-    coords: locationCoords,
-    lastKnownCoords,
-    fallbackCoords,
-  })
-
-  const recenterToSafeLocation = () => {
-    mapRef.current?.setView(
-      [safeCenter.lat, safeCenter.lng],
-      DEFAULT_MAP_ZOOM,
-      { animate: true },
-    )
-  }
-
-  const handleMyLocation = () => {
-    if (status === "granted") {
-      recenterToSafeLocation()
-      return
-    }
-
-    openPermissionModal("map")
-  }
-
-  useEffect(() => {
-    if (status === "granted" && triggerSource === "map") {
-      recenterToSafeLocation()
-    }
-  }, [status, triggerSource])
+  const mapStyle = useMapStyleStore((state) => state.currentMapStyle)
+  const setMapStyle = useMapStyleStore((state) => state.setMapStyle)
+  const { recenterToSafeLocation, handleMyLocation } =
+    useMapControlActions(mapRef)
 
   return (
-    <div className="absolute top-4 right-4 z-[10] flex flex-col gap-2">
+    <div className="absolute top-4 right-4 z-[10] hidden flex-col gap-2 md:flex">
+      <Card className="border-border/80 bg-card/90 shadow-lg ring-border/60 backdrop-blur-sm">
+        <CardContent className="space-y-2 px-2.5 py-2">
+          <div className="min-w-0">
+            <p className="text-xs font-medium leading-none">Map style</p>
+            <p className="mt-0.5 text-[10px] text-muted-foreground">
+              Switch base layer
+            </p>
+          </div>
+          <ToggleGroup
+            type="single"
+            value={mapStyle}
+            onValueChange={(value) => {
+              if (value) setMapStyle(value as MapStyle)
+            }}
+            variant="outline"
+            size="sm"
+            className="grid w-full grid-cols-3 gap-1"
+          >
+            {MAP_STYLE_OPTIONS.map((option) => {
+              const Icon = MAP_STYLE_ICONS[option.value]
+              const isActive = mapStyle === option.value
+
+              return (
+                <ToggleGroupItem
+                  key={option.value}
+                  value={option.value}
+                  aria-label={`${option.label} map`}
+                  className={cn(
+                    "flex h-8 flex-col gap-0.5 px-1 text-[9px] leading-none",
+                    isActive &&
+                      "border-brand-cyan/40 bg-brand-cyan/10 text-brand-cyan",
+                  )}
+                >
+                  <Icon className="size-3.5" />
+                  <span>{option.label}</span>
+                </ToggleGroupItem>
+              )
+            })}
+          </ToggleGroup>
+        </CardContent>
+      </Card>
+
       <Card className="border-border/80 bg-card/90 shadow-lg ring-border/60 backdrop-blur-sm">
         <CardContent className="flex items-center gap-2.5 px-2.5 py-2">
           <Toggle
