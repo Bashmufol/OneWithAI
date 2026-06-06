@@ -1,7 +1,7 @@
 import type { Station } from "@evocharge/types"
 import { useEffect, useState } from "react"
 
-import { useMapStore } from "@/components/map/store"
+import { useMapStore } from "@/store/mapStore"
 import { resolveRoadRouteForIntent } from "@/lib/roadRouteResolver"
 import { useMapIntentStore } from "@/store/mapIntentStore"
 

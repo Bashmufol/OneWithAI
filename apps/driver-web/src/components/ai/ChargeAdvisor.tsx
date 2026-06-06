@@ -14,8 +14,8 @@ import { useRouteStore } from "@/components/route/store"
 import { EvoScoreBadge } from "@/components/stations/EvoScoreBadge"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { InlineErrorState } from "@/components/errors/InlineErrorState"
 import { ErrorState } from "@/components/ui/ErrorState"
-import { DataFetchError } from "@/components/ui/DataFetchError"
 import { LoadingState } from "@/components/ui/LoadingState"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -355,7 +355,7 @@ export function ChargeAdvisor() {
     <Card className="flex min-h-[min(640px,75vh)] flex-col border-border/80 bg-card ring-border/60">
       {isRefetchError && stations.length > 0 ? (
         <div className="border-b border-border/60 p-4">
-          <DataFetchError compact onRetry={onRetry} isRetrying={isRetrying} />
+          <InlineErrorState compact onRetry={onRetry} isRetrying={isRetrying} />
         </div>
       ) : null}
       <CardHeader className="border-b border-border/60 pb-4">

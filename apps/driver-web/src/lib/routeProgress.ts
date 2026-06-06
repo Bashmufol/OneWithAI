@@ -1,5 +1,5 @@
 import { getDistance } from "@/lib/distance"
-import type { NavCoords } from "@/store/navigationStore"
+import type { NavCoords } from "@/types/navigation"
 
 const DEFAULT_ROUTE_SEGMENTS = 80
 

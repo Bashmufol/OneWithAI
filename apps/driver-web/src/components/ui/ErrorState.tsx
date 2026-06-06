@@ -1,3 +1,4 @@
+import { FRIENDLY_INLINE } from "@/lib/errorUtils"
 import { AlertTriangle, RefreshCw, Zap } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -13,8 +14,8 @@ interface ErrorStateProps {
 }
 
 export function ErrorState({
-  title = "Unable to load data",
-  description = "Something went wrong while fetching station data. Try again.",
+  title = FRIENDLY_INLINE.title,
+  description = FRIENDLY_INLINE.description,
   onRetry,
   isRetrying = false,
   className,

@@ -19,5 +19,17 @@ export default defineConfig({
     fs: {
       allow: ["../.."],
     },
+    hmr: {
+      overlay: true,
+    },
+  },
+  optimizeDeps: {
+    include: [
+      "react",
+      "react-dom",
+      "react-router-dom",
+      "leaflet",
+      "react-leaflet",
+    ],
   },
 })

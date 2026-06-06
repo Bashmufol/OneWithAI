@@ -5,8 +5,8 @@ import { useMapStore } from "@/components/map/store"
 import { BatteryRoutePanel } from "@/components/route/BatteryRoutePanel"
 import { StationFilters } from "@/components/stations/StationFilters"
 import { StationList } from "@/components/stations/StationList"
+import { InlineErrorState } from "@/components/errors/InlineErrorState"
 import { ErrorState } from "@/components/ui/ErrorState"
-import { DataFetchError } from "@/components/ui/DataFetchError"
 import { LoadingState } from "@/components/ui/LoadingState"
 import { useChargingRoute } from "@/hooks/useChargingRoute"
 import { useFilteredStations } from "@/hooks/useFilteredStations"
@@ -126,7 +126,7 @@ export function StationMapPanel() {
 
       <aside className="map-sidebar-scroll flex min-w-0 flex-col gap-3 lg:max-h-full lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:pr-1">
         {showBackgroundSyncError ? (
-          <DataFetchError compact onRetry={onRetry} isRetrying={isRetrying} />
+          <InlineErrorState compact onRetry={onRetry} isRetrying={isRetrying} />
         ) : null}
         <BatteryRoutePanel
           activeRoute={activeRoute}

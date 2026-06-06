@@ -9,19 +9,13 @@ import {
   getTotalRouteDistanceMeters,
   projectOntoRoute,
 } from "@/lib/routeProgress"
+import type {
+  NavCoords,
+  NavigationMode,
+  NavigationRoute,
+} from "@/types/navigation"
 
-export type NavigationMode = "idle" | "active" | "paused"
-
-export interface NavCoords {
-  lat: number
-  lng: number
-}
-
-export interface NavigationRoute {
-  from: NavCoords
-  to: NavCoords
-  destinationLabel?: string
-}
+export type { NavCoords, NavigationMode, NavigationRoute } from "@/types/navigation"
 
 interface RouteProgressUpdate {
   routeProgressDistanceM?: number

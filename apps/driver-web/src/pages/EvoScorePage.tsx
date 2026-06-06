@@ -9,8 +9,8 @@ import { EvoScoreBadge } from "@/components/stations/EvoScoreBadge"
 import { EvoScoreBreakdownContent } from "@/components/stations/EvoScoreBreakdown"
 import { useLiveStationsQuery } from "@/hooks/useLiveStationsQuery"
 import { useQueryRetry } from "@/hooks/useQueryRetry"
+import { InlineErrorState } from "@/components/errors/InlineErrorState"
 import { ErrorState } from "@/components/ui/ErrorState"
-import { DataFetchError } from "@/components/ui/DataFetchError"
 import { LoadingState } from "@/components/ui/LoadingState"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -90,7 +90,7 @@ export function EvoScorePage() {
     >
       {isRefetchError && stations.length > 0 ? (
         <motion.div variants={slideUp} className="md:col-span-2 lg:col-span-3">
-          <DataFetchError onRetry={onRetry} isRetrying={isRetrying} />
+          <InlineErrorState onRetry={onRetry} isRetrying={isRetrying} />
         </motion.div>
       ) : null}
       <motion.div variants={slideUp} className="md:col-span-2 lg:col-span-3">

@@ -1,4 +1,4 @@
-import { useMapStore } from "@/components/map/store"
+import { useMapStore } from "@/store/mapStore"
 import { resolveRoadRouteForIntent } from "@/lib/roadRouteResolver"
 import type { MapCoords, RouteDestination } from "@/store/mapIntentStore"
 import { useMapIntentStore } from "@/store/mapIntentStore"

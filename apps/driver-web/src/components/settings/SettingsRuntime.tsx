@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
 
-import { useMapStore } from "@/components/map/store"
+import { useMapStore } from "@/store/mapStore"
 import { useSettingsStore } from "@/lib/settingsStore"
 
 export function SettingsRuntime() {

@@ -2,7 +2,7 @@ import type { LatLngTuple, Map as LeafletMap } from "leaflet"
 
 import { isMapContainerReady } from "@/lib/mapReady"
 import { offsetCoordinate } from "@/lib/routeProgress"
-import type { NavCoords } from "@/store/navigationStore"
+import type { NavCoords } from "@/types/navigation"
 
 export interface NavigationFollowController {
   stop: () => void
@@ -122,5 +122,3 @@ export function panMapToVehicle(
     noMoveStart: true,
   })
 }
-
-export { getRouteMidpoint } from "@/components/map/RouteLayer"
