@@ -1,0 +1,22 @@
+{
+  "name": "@evocharge/api-client",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./mocks": "./src/mocks/handlers.ts"
+  },
+  "scripts": {
+    "build": "tsc --noEmit",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@evocharge/types": "workspace:*",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "msw": "^2.10.2",
+    "typescript": "~6.0.2"
+  }
+}

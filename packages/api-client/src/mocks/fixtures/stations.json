@@ -1,0 +1,272 @@
+[
+  {
+    "id": "station-vi-001",
+    "name": "Eko Atlantic Charge Hub",
+    "operator": "EvoCharge",
+    "location": { "lat": 6.4158, "lng": 3.4219, "address": "Eko Atlantic Blvd, Victoria Island", "city": "Lagos" },
+    "connectors": [
+      { "id": "conn-vi-001-a", "type": "CCS2", "powerKw": 150, "status": "available" },
+      { "id": "conn-vi-001-b", "type": "Type2", "powerKw": 22, "status": "busy" }
+    ],
+    "status": "available",
+    "evoScore": 92,
+    "lastUpdated": "2026-06-06T10:30:00.000Z"
+  },
+  {
+    "id": "station-vi-002",
+    "name": "VI Akin Adesola Fast Charge",
+    "operator": "GridPower NG",
+    "location": { "lat": 6.4281, "lng": 3.4214, "address": "Akin Adesola St, Victoria Island", "city": "Lagos" },
+    "connectors": [
+      { "id": "conn-vi-002-a", "type": "CCS2", "powerKw": 120, "status": "available" }
+    ],
+    "status": "available",
+    "evoScore": 88,
+    "lastUpdated": "2026-06-06T10:25:00.000Z"
+  },
+  {
+    "id": "station-vi-003",
+    "name": "Oniru Beach EV Point",
+    "operator": "ChargePoint Lagos",
+    "location": { "lat": 6.4225, "lng": 3.4482, "address": "Ozumba Mbadiwe Ave, VI", "city": "Lagos" },
+    "connectors": [
+      { "id": "conn-vi-003-a", "type": "Type2", "powerKw": 22, "status": "busy" }
+    ],
+    "status": "busy",
+    "evoScore": 71,
+    "lastUpdated": "2026-06-06T10:20:00.000Z"
+  },
+  {
+    "id": "station-lekki-002",
+    "name": "Lekki Phase 1 Supercharger",
+    "operator": "GridPower NG",
+    "location": { "lat": 6.4474, "lng": 3.4703, "address": "Admiralty Way, Lekki Phase 1", "city": "Lagos" },
+    "connectors": [
+      { "id": "conn-lekki-002-a", "type": "CCS2", "powerKw": 120, "status": "busy" },
+      { "id": "conn-lekki-002-b", "type": "CHAdeMO", "powerKw": 50, "status": "available" }
+    ],
+    "status": "busy",
+    "evoScore": 78,
+    "lastUpdated": "2026-06-06T10:28:00.000Z"
+  },
+  {
+    "id": "station-lekki-004",
+    "name": "Lekki Mall Charging Bay",
+    "operator": "EvoCharge",
+    "location": { "lat": 6.4412, "lng": 3.4885, "address": "Lekki-Epe Expressway", "city": "Lagos" },
+    "connectors": [
+      { "id": "conn-lekki-004-a", "type": "CCS2", "powerKw": 150, "status": "available" },
+      { "id": "conn-lekki-004-b", "type": "Type2", "powerKw": 22, "status": "available" }
+    ],
+    "status": "available",
+    "evoScore": 85,
+    "lastUpdated": "2026-06-06T10:32:00.000Z"
+  },
+  {
+    "id": "station-lekki-005",
+    "name": "Chevron Drive EV Station",
+    "operator": "VoltNG",
+    "location": { "lat": 6.4358, "lng": 3.5124, "address": "Chevron Drive, Lekki", "city": "Lagos" },
+    "connectors": [
+      { "id": "conn-lekki-005-a", "type": "CCS2", "powerKw": 100, "status": "offline" }
+    ],
+    "status": "offline",
+    "evoScore": 52,
+    "lastUpdated": "2026-06-06T09:40:00.000Z"
+  },
+  {
+    "id": "station-lekki-006",
+    "name": "Ajah Express Hub",
+    "operator": "GridPower NG",
+    "location": { "lat": 6.4621, "lng": 3.5532, "address": "Lekki-Epe Expwy, Ajah", "city": "Lagos" },
+    "connectors": [
+      { "id": "conn-lekki-006-a", "type": "CCS2", "powerKw": 120, "status": "available" }
+    ],
+    "status": "available",
+    "evoScore": 80,
+    "lastUpdated": "2026-06-06T10:15:00.000Z"
+  },
+  {
+    "id": "station-ikeja-003",
+    "name": "Ikeja City Mall EV Station",
+    "operator": "ChargePoint Lagos",
+    "location": { "lat": 6.6018, "lng": 3.3515, "address": "Obafemi Awolowo Way, Ikeja", "city": "Lagos" },
+    "connectors": [
+      { "id": "conn-ikeja-003-a", "type": "GB/T", "powerKw": 60, "status": "offline" },
+      { "id": "conn-ikeja-003-b", "type": "Type2", "powerKw": 22, "status": "offline" }
+    ],
+    "status": "offline",
+    "evoScore": 45,
+    "lastUpdated": "2026-06-06T09:55:00.000Z"
+  },
+  {
+    "id": "station-ikeja-007",
+    "name": "Allen Avenue Charge Point",
+    "operator": "EvoCharge",
+    "location": { "lat": 6.5942, "lng": 3.3628, "address": "Allen Avenue, Ikeja", "city": "Lagos" },
+    "connectors": [
+      { "id": "conn-ikeja-007-a", "type": "CCS2", "powerKw": 150, "status": "available" }
+    ],
+    "status": "available",
+    "evoScore": 90,
+    "lastUpdated": "2026-06-06T10:33:00.000Z"
+  },
+  {
+    "id": "station-ikeja-008",
+    "name": "Computer Village EV Bay",
+    "operator": "VoltNG",
+    "location": { "lat": 6.5885, "lng": 3.3721, "address": "Otigba, Ikeja", "city": "Lagos" },
+    "connectors": [
+      { "id": "conn-ikeja-008-a", "type": "Type2", "powerKw": 22, "status": "busy" }
+    ],
+    "status": "busy",
+    "evoScore": 68,
+    "lastUpdated": "2026-06-06T10:22:00.000Z"
+  },
+  {
+    "id": "station-yaba-009",
+    "name": "Yaba Tech Hub Charger",
+    "operator": "EvoCharge",
+    "location": { "lat": 6.5074, "lng": 3.3719, "address": "Herbert Macaulay Way, Yaba", "city": "Lagos" },
+    "connectors": [
+      { "id": "conn-yaba-009-a", "type": "CCS2", "powerKw": 120, "status": "available" },
+      { "id": "conn-yaba-009-b", "type": "Type2", "powerKw": 22, "status": "available" }
+    ],
+    "status": "available",
+    "evoScore": 86,
+    "lastUpdated": "2026-06-06T10:31:00.000Z"
+  },
+  {
+    "id": "station-yaba-010",
+    "name": "Tejuosho Market EV",
+    "operator": "GridPower NG",
+    "location": { "lat": 6.5122, "lng": 3.3845, "address": "Tejuosho, Yaba", "city": "Lagos" },
+    "connectors": [
+      { "id": "conn-yaba-010-a", "type": "Type2", "powerKw": 22, "status": "busy" }
+    ],
+    "status": "busy",
+    "evoScore": 74,
+    "lastUpdated": "2026-06-06T10:18:00.000Z"
+  },
+  {
+    "id": "station-surulere-011",
+    "name": "National Stadium EV Lot",
+    "operator": "ChargePoint Lagos",
+    "location": { "lat": 6.4998, "lng": 3.3612, "address": "Surulere, Lagos", "city": "Lagos" },
+    "connectors": [
+      { "id": "conn-surulere-011-a", "type": "CCS2", "powerKw": 100, "status": "available" }
+    ],
+    "status": "available",
+    "evoScore": 82,
+    "lastUpdated": "2026-06-06T10:29:00.000Z"
+  },
+  {
+    "id": "station-island-012",
+    "name": "Marina Business District EV",
+    "operator": "EvoCharge",
+    "location": { "lat": 6.4541, "lng": 3.3948, "address": "Marina, Lagos Island", "city": "Lagos" },
+    "connectors": [
+      { "id": "conn-island-012-a", "type": "CCS2", "powerKw": 150, "status": "busy" }
+    ],
+    "status": "busy",
+    "evoScore": 76,
+    "lastUpdated": "2026-06-06T10:26:00.000Z"
+  },
+  {
+    "id": "station-island-013",
+    "name": "CMS Bus Terminal Charge",
+    "operator": "VoltNG",
+    "location": { "lat": 6.4485, "lng": 3.4012, "address": "CMS, Lagos Island", "city": "Lagos" },
+    "connectors": [
+      { "id": "conn-island-013-a", "type": "Type2", "powerKw": 22, "status": "available" }
+    ],
+    "status": "available",
+    "evoScore": 79,
+    "lastUpdated": "2026-06-06T10:27:00.000Z"
+  },
+  {
+    "id": "station-mainland-014",
+    "name": "Ojota Interchange EV",
+    "operator": "GridPower NG",
+    "location": { "lat": 6.5682, "lng": 3.3885, "address": "Ojota, Lagos Mainland", "city": "Lagos" },
+    "connectors": [
+      { "id": "conn-mainland-014-a", "type": "CCS2", "powerKw": 120, "status": "offline" }
+    ],
+    "status": "offline",
+    "evoScore": 48,
+    "lastUpdated": "2026-06-06T09:30:00.000Z"
+  },
+  {
+    "id": "station-mainland-015",
+    "name": "Maryland Mall Charger",
+    "operator": "EvoCharge",
+    "location": { "lat": 6.5785, "lng": 3.3678, "address": "Maryland, Lagos", "city": "Lagos" },
+    "connectors": [
+      { "id": "conn-mainland-015-a", "type": "CCS2", "powerKw": 150, "status": "available" },
+      { "id": "conn-mainland-015-b", "type": "CHAdeMO", "powerKw": 50, "status": "available" }
+    ],
+    "status": "available",
+    "evoScore": 91,
+    "lastUpdated": "2026-06-06T10:34:00.000Z"
+  },
+  {
+    "id": "station-apapa-016",
+    "name": "Apapa Port EV Depot",
+    "operator": "ChargePoint Lagos",
+    "location": { "lat": 6.4482, "lng": 3.3585, "address": "Apapa Wharf Rd", "city": "Lagos" },
+    "connectors": [
+      { "id": "conn-apapa-016-a", "type": "GB/T", "powerKw": 60, "status": "busy" }
+    ],
+    "status": "busy",
+    "evoScore": 65,
+    "lastUpdated": "2026-06-06T10:12:00.000Z"
+  },
+  {
+    "id": "station-ikoyi-017",
+    "name": "Ikoyi Club EV Station",
+    "operator": "EvoCharge",
+    "location": { "lat": 6.4528, "lng": 3.4315, "address": "Ikoyi Club 1938, Ikoyi", "city": "Lagos" },
+    "connectors": [
+      { "id": "conn-ikoyi-017-a", "type": "CCS2", "powerKw": 150, "status": "available" }
+    ],
+    "status": "available",
+    "evoScore": 94,
+    "lastUpdated": "2026-06-06T10:35:00.000Z"
+  },
+  {
+    "id": "station-banana-018",
+    "name": "Banana Island EV Lounge",
+    "operator": "VoltNG",
+    "location": { "lat": 6.4385, "lng": 3.4058, "address": "Banana Island, Ikoyi", "city": "Lagos" },
+    "connectors": [
+      { "id": "conn-banana-018-a", "type": "CCS2", "powerKw": 120, "status": "available" }
+    ],
+    "status": "available",
+    "evoScore": 96,
+    "lastUpdated": "2026-06-06T10:36:00.000Z"
+  },
+  {
+    "id": "station-gbagada-019",
+    "name": "Gbagada Express EV",
+    "operator": "GridPower NG",
+    "location": { "lat": 6.5512, "lng": 3.3925, "address": "Gbagada-Oworonshoki Expwy", "city": "Lagos" },
+    "connectors": [
+      { "id": "conn-gbagada-019-a", "type": "Type2", "powerKw": 22, "status": "offline" }
+    ],
+    "status": "offline",
+    "evoScore": 50,
+    "lastUpdated": "2026-06-06T09:45:00.000Z"
+  },
+  {
+    "id": "station-lekki-020",
+    "name": "Ikate Elegushi Beach EV",
+    "operator": "ChargePoint Lagos",
+    "location": { "lat": 6.4285, "lng": 3.4985, "address": "Elegushi Beach Rd, Lekki", "city": "Lagos" },
+    "connectors": [
+      { "id": "conn-lekki-020-a", "type": "CCS2", "powerKw": 100, "status": "available" }
+    ],
+    "status": "available",
+    "evoScore": 83,
+    "lastUpdated": "2026-06-06T10:28:00.000Z"
+  }
+]
