@@ -59,7 +59,7 @@ export function StationTable({ stations }: Props) {
       s.lga.toLowerCase().includes(search.toLowerCase());
     const matchStatus = filterStatus === "all" || s.status === filterStatus;
     const matchOp = filterOperator === "all" || s.operator === filterOperator;
-    const matchPower = filterPower === "all" || s.powerSource === filterPower;
+    const matchPower = filterPower === "all" || s.power_source === filterPower;
     return matchSearch && matchStatus && matchOp && matchPower;
   });
 
@@ -161,9 +161,9 @@ export function StationTable({ stations }: Props) {
                   </td>
                   <td className="px-4 py-3">
                     {/* Nigeria power source badge — unique differentiator */}
-                    <PowerBadge source={station.powerSource} />
+                    <PowerBadge source={station.power_source} />
                   </td>
-                  <td className="px-4 py-3 text-zinc-400 font-mono">{station.powerKw} kW</td>
+                  <td className="px-4 py-3 text-zinc-400 font-mono">{station.power_kw} kW</td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <div className="w-16 bg-zinc-700 rounded-full h-1.5">
@@ -182,7 +182,7 @@ export function StationTable({ stations }: Props) {
                     </div>
                   </td>
                   <td className="px-4 py-3 text-zinc-400 text-xs font-mono">
-                    {station.status === "busy" ? `${station.waitTimeMinutes} min` : "—"}
+                    {station.status === "busy" ? `${station.wait_time} min` : "—"}
                   </td>
                   <td className="px-4 py-3 text-zinc-500 text-xs">{station.lastUpdated}</td>
                 </tr>

@@ -45,7 +45,7 @@ export function KpiCards({ stations }: Props) {
 
   // Average utilization only across non-offline stations
   const activeStations = stations.filter((s) => s.status !== "offline");
-  const avgUtil =
+  const avg_utilization_pct =
     activeStations.length > 0
       ? Math.round(
           activeStations.reduce((sum, s) => sum + s.utilization, 0) /
@@ -55,10 +55,10 @@ export function KpiCards({ stations }: Props) {
 
   // Average wait time across busy stations
   const busyStations = stations.filter((s) => s.status === "busy");
-  const avgWait =
+  const avg_wait_min =
     busyStations.length > 0
       ? Math.round(
-          busyStations.reduce((sum, s) => sum + s.waitTimeMinutes, 0) /
+          busyStations.reduce((sum, s) => sum + s.wait_time, 0) /
             busyStations.length
         )
       : 0;
@@ -80,14 +80,14 @@ export function KpiCards({ stations }: Props) {
     },
     {
       label: "Avg. Utilization",
-      value: `${avgUtil}%`,
+      value: `${avg_utilization_pct}%`,
       sub: `${busy} busy`,
       icon: "📊",
       accent: "border-amber-800/60",
     },
     {
       label: "Avg. Wait Time",
-      value: `${avgWait} min`,
+      value: `${avg_wait_min} min`,
       sub: "busy stations",
       icon: "⏱",
       accent: "border-cyan-800/60",
